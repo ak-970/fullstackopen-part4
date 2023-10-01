@@ -8,7 +8,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "build:ui": "rm -rf dist && cd ../fullstackopen/part2/2_the_phonebook && npm run build && cp -r dist ../../../fullstackopen-part3",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,8 @@
   },
   "homepage": "https://github.com/ak-970/fullstackopen-part3#readme",
   "devDependencies": {
+    "eslint": "^8.50.0",
+    "eslint-plugin-react": "^7.33.2",
     "nodemon": "^3.0.1"
   },
   "dependencies": {
