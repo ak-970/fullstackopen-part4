@@ -3,7 +3,17 @@ content-type: application/json
 
 {
     "name": "Mustafa Mustu", 
-    "number": "123"
+    "number": "1234"
+}
+
+
+###
+POST http://localhost:3001/api/persons
+content-type: application/json
+
+{
+    "name": "a", 
+    "number": "1"
 }
 
 

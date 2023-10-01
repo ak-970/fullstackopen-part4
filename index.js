@@ -23,10 +23,6 @@ app.use(morgan(function(tokens, request, response) {
 }))
 
 
-// app.get('/', (request, response) => {
-//     response.send('<h1>Hello World!</h1><p><a href="/api/persons">see data</a></p>')
-// })
-
 app.get('/info', (request, response) => {
     Person.find({}).then(persons => {
         response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`)
@@ -62,28 +58,13 @@ app.delete('/api/persons/:id', (request, response, next) => {
 })
 
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
-
-    if (!body.name && !body.number) {
-        return response.status(400).json({
-            error: 'name and number missing' 
-        })
-    } else if (!body.name) {
-        return response.status(400).json({
-            error: 'name missing' 
-        })
-    } else if (!body.number) {
-        return response.status(400).json({
-            error: 'number missing' 
-        })
-    }
-    // else if (persons.find(p => p.name === body.name)) {
-    //     return response.status(400).json({ 
-    //         error: 'name already exists but must be unique' 
-    //     })
-    // }
-
+    
+    const person = new Person({
+        name: body.name,
+        number: body.number
+    })
     
     Person.find({}).then(persons => {
         if (persons.find(p => p.name === body.name)) {
@@ -91,28 +72,55 @@ app.post('/api/persons', (request, response) => {
                 error: 'name already exists but must be unique' 
             })
         } else {
-            const person = new Person({
-                name: body.name,
-                number: body.number
-            })
-        
-            person.save().then(savedPerson => {
-                response.json(savedPerson)
-            })
+            person.save()
+                .then(savedPerson => {
+                    response.json(savedPerson)
+                })
+                .catch(error => next(error))
         }
     })
+
+    // if (!body.name && !body.number) {
+    //     return response.status(400).json({
+    //         error: 'name and number missing'
+    //     })
+    // } else if (!body.name) {
+    //     return response.status(400).json({
+    //         error: 'name missing' 
+    //     })
+    // } else if (!body.number) {
+    //     return response.status(400).json({
+    //         error: 'number missing' 
+    //     })
+    // }
+    
+    // Person.find({}).then(persons => {
+    //     if (persons.find(p => p.name === body.name)) {
+    //         return response.status(400).json({ 
+    //             error: 'name already exists but must be unique' 
+    //         })
+    //     } else {
+    //         const person = new Person({
+    //             name: body.name,
+    //             number: body.number
+    //         })
+        
+    //         person.save().then(savedPerson => {
+    //             response.json(savedPerson)
+    //         })
+    //     }
+    // })
 })
 
 
 app.put('/api/persons/:id', (request, response, next) => {
-    const body = request.body
+    const { name, number } = request.body
 
-    const person = {
-        name: body.name,
-        number: body.number
-    }
-
-    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    Person.findByIdAndUpdate(
+        request.params.id,
+        { name, number },
+        { new: true, runValidators: true, context: 'query' }
+    )
         .then(updatedPerson => {
             response.json(updatedPerson)
         })
@@ -132,6 +140,8 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
     }
 
     next(error)
