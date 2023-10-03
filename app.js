@@ -2,11 +2,9 @@ const config = require('./utils/config')
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const personsRouter = require('./controllers/persons')
-const infoRouter = require('./controllers/info')
+const blogsRouter = require('./controllers/blogs')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
-// const morgan = require('morgan')
 const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
@@ -26,21 +24,9 @@ app.use(cors())
 app.use(express.static('dist'))
 app.use(express.json())
 app.use(middleware.requestLogger)
-// app.use(morgan(function(tokens, request, response) {
-//   return [
-//     tokens.method(request, response),
-//     tokens.url(request, response),
-//     tokens.status(request, response),
-//     tokens.res(request, response, 'content-length'),
-//     '-',
-//     tokens['response-time'](request, response), 'ms',
-//     JSON.stringify(request.body)
-//   ].join(' ')
-// }))
 
 
-app.use('/api/persons', personsRouter)
-app.use('/info', infoRouter)
+app.use('/api/blogs', blogsRouter)
 
 
 app.use(middleware.unknownEndpoint)

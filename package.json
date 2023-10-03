@@ -7,20 +7,20 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build:ui": "rm -rf dist && cd ../fullstackopen/part2/2_the_phonebook && npm run build && cp -r dist ../../../fullstackopen-part3",
+    "build:ui": "rm -rf dist && cd ./frontend && npm run build && cp -r dist ../",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
     "lint": "eslint ."
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ak-970/fullstackopen-part3.git"
+    "url": "git+https://github.com/ak-970/fullstackopen-part4.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ak-970/fullstackopen-part3/issues"
+    "url": "https://github.com/ak-970/fullstackopen-part4/issues"
   },
-  "homepage": "https://github.com/ak-970/fullstackopen-part3#readme",
+  "homepage": "https://github.com/ak-970/fullstackopen-part4#readme",
   "devDependencies": {
     "eslint": "^8.50.0",
     "eslint-plugin-react": "^7.33.2",
