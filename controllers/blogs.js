@@ -1,36 +1,30 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 
-blogsRouter.get('/', (request, response) => {
-  Blog.find({}).then(blogs => {
-    response.json(blogs)
-  })
+
+
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog.find({})
+  response.json(blogs)
 })
 
-blogsRouter.get('/:id', (request, response) => {
-  Blog.findById(request.params.id)
-    .then(blog => {
-      if (blog.name) {
-        response.json(blog)
-      } else {
-        response.status(404).end()
-      }
-    })
-    .catch(error => next(error))
-})
-
-
-blogsRouter.delete('/:id', (request, response, next) => {
-  Blog.findByIdAndRemove(request.params.id)
-    .then(result => {
-      response.status(204).end()
-      // response.status(200).end()
-    })
-    .catch(error => next(error))
+blogsRouter.get('/:id', async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  if (blog) {
+    response.json(blog)
+  } else {
+    response.status(404).end()
+  }
 })
 
 
-blogsRouter.post('/', (request, response, next) => {
+blogsRouter.delete('/:id', async (request, response) => {
+  await Blog.findByIdAndRemove(request.params.id)
+  response.status(204).end()
+})
+
+
+blogsRouter.post('/', async (request, response) => {
   const body = request.body
 
   const blog = new Blog({
@@ -40,49 +34,31 @@ blogsRouter.post('/', (request, response, next) => {
     likes: body.likes
   })
 
-  blog.save()
-    .then(savedBlog => {
-      // response.json(savedBlog)
-      response.status(201).json(savedBlog)
-    })
-    .catch(error => next(error))
-
-  // Blog.find({}).then(blogs => {
-  //   if (blogs.find(p => p.name === body.name)) {
-  //     return response.status(400).json({
-  //       error: 'name already exists but must be unique'
-  //     })
-  //   } else {
-  //     Blog.save()
-  //       .then(savedBlog => {
-  //         response.json(savedBlog)
-  //       })
-  //       .catch(error => next(error))
-  //   }
-  // })
+  const savedBlog = await blog.save()
+  response.status(201).json(savedBlog)
 })
 
 
-blogsRouter.put('/:id', (request, response, next) => {
-  const {
-    title,
-    author,
-    url,
-    likes
-  } = request.body
+blogsRouter.put('/:id', async (request, response) => {
+  const { title, author, url, likes } = request.body
 
-  Blog.findByIdAndUpdate(
+  const updatedBlog = await Blog.findByIdAndUpdate(
     request.params.id,
     { title, author, url, likes },
-    { new: true,
+    {
+      new: true,
       runValidators: true,
       context: 'query'
     }
   )
-    .then(updatedBlog => {
-      response.json(updatedBlog)
-    })
-    .catch(error => next(error))
+
+  if (updatedBlog) {
+    response.json(updatedBlog)
+  } else {
+  // id doesn't exist, updatedBlog is null
+    response.status(404).end()
+  }
 })
+
 
 module.exports = blogsRouter
