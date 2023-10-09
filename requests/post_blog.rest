@@ -1,9 +1,23 @@
 POST http://localhost:3003/api/blogs
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFiYyIsImlkIjoiNjUyM2Q3Mjc2MzRjYmI5ZDYxOTQyOWM4IiwiaWF0IjoxNjk2ODY0NjM5fQ.P82xslAyREXmRK6-BO9O0PYE2t1vrS0868RXYsMrKGK
 
 {
-  "title" : "Blog Title",
+  "title" : "Blog Title 3 Tets",
   "author" : "Author Name",
-  "url" : "https://test.de",
-  "likes" : 123
+  "url" : "https://test-3.de",
+  "likes" : 5
+}
+
+
+###
+POST http://localhost:3003/api/blogs
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RVc2VyIiwiaWQiOiI2NTI0MzlmN2RkOGNhODdlM2MzNDQ5MWEiLCJpYXQiOjE2OTY4NzMzMjV9.qUwPC2QKAl8Ivm1iyoTEyaelKBSnNGBOW47sNZD-X_o
+
+{
+  "title" : "Ein Authorisierter Blog",
+  "author" : "Ein Authorisierter Author",
+  "url" : "https://lalallala.de",
+  "likes" : 5
 }

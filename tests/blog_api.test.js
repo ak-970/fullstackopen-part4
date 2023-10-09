@@ -6,6 +6,7 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 
 
+
 beforeEach(async () => {
   await Blog.deleteMany({})
 
@@ -90,9 +91,11 @@ describe('addition of a new blog', () => {
       url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
       likes: 12
     }
+    const token = await helper.validToken()
 
     await api
       .post('/api/blogs')
+      .set({ Authorization: `Bearer ${token}` })
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -112,9 +115,11 @@ describe('addition of a new blog', () => {
       author: 'Robert C. Martin',
       url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html'
     }
+    const token = await helper.validToken()
 
     await api
       .post('/api/blogs')
+      .set({ Authorization: `Bearer ${token}` })
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -132,9 +137,11 @@ describe('addition of a new blog', () => {
       url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
       likes: 10,
     }
+    const token = await helper.validToken()
 
     await api
       .post('/api/blogs')
+      .set({ Authorization: `Bearer ${token}` })
       .send(newBlog)
       .expect(400)
   })
@@ -146,41 +153,86 @@ describe('addition of a new blog', () => {
       author: 'Robert C. Martin',
       likes: 2,
     }
+    const token = await helper.validToken()
+
+    await api
+      .post('/api/blogs')
+      .set({ Authorization: `Bearer ${token}` })
+      .send(newBlog)
+      .expect(400)
+  })
+
+  test('fails with status code 401 if blog data valid but token invalid', async () => {
+    const newBlog = {
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+      likes: 12
+    }
+    const token = await helper.invalidToken()
+
+    await api
+      .post('/api/blogs')
+      .set({ Authorization: `Bearer ${token}` })
+      .send(newBlog)
+      .expect(401)
+  })
+
+  test('fails with status code 401 if blog data valid but token not provided', async () => {
+    const newBlog = {
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+      likes: 12
+    }
 
     await api
       .post('/api/blogs')
       .send(newBlog)
-      .expect(400)
+      .expect(401)
   })
 })
 
 
 describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
+    const newBlog = {
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+      likes: 12
+    }
+    const token = await helper.validToken()
+    await api
+      .post('/api/blogs')
+      .set({ Authorization: `Bearer ${token}` })
+      .send(newBlog)
+
     const blogsAtStart = await helper.blogsInDb()
-    const blogToDelete = blogsAtStart[0]
+    const blogToDelete = blogsAtStart[blogsAtStart.length - 1]
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set({ Authorization: `Bearer ${token}` })
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
 
-    expect(blogsAtEnd).toHaveLength(
-      helper.initialBlogs.length - 1
-    )
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
 
     const titles = blogsAtEnd.map(b => b.title)
 
-    expect(titles).not.toContain(blogToDelete.content)
+    expect(titles).not.toContain(blogToDelete.title)
   })
 
   test('breaks without changes with status code 204 if (valid) id doesn\'t exist', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const validNonexistingId = await helper.nonExistingId()
+    const token = await helper.validToken()
 
     await api
       .delete(`/api/blogs/${validNonexistingId}`)
+      .set({ Authorization: `Bearer ${token}` })
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -191,9 +243,11 @@ describe('deletion of a blog', () => {
   test('fails with status code 400 if id is invalid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const invalidId = '5'
+    const token = await helper.validToken()
 
     await api
       .delete(`/api/blogs/${invalidId}`)
+      .set({ Authorization: `Bearer ${token}` })
       .expect(400)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -221,7 +275,7 @@ describe('updating of a blog', () => {
     expect(resultBlog.body).toEqual(blogToUpdate)
   })
 
-  test('fails with statuscode 404 if note does not exist', async () => {
+  test('fails with statuscode 404 if blog does not exist', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const validNonexistingId = await helper.nonExistingId()
 
