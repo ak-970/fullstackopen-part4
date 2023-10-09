@@ -4,33 +4,44 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "build:ui": "rm -rf dist && cd ../fullstackopen/part2/2_the_phonebook && npm run build && cp -r dist ../../../fullstackopen-part3",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "dev:test": "cross-env NODE_ENV=test nodemon index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
+    "build:ui": "rm -rf dist && cd ./frontend && npm run build && cp -r dist ../",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
     "lint": "eslint ."
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ak-970/fullstackopen-part3.git"
+    "url": "git+https://github.com/ak-970/fullstackopen-part4.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ak-970/fullstackopen-part3/issues"
+    "url": "https://github.com/ak-970/fullstackopen-part4/issues"
   },
-  "homepage": "https://github.com/ak-970/fullstackopen-part3#readme",
+  "homepage": "https://github.com/ak-970/fullstackopen-part4#readme",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^8.50.0",
     "eslint-plugin-react": "^7.33.2",
-    "nodemon": "^3.0.1"
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.3"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.3",
+    "mongoose-unique-validator": "^4.0.0",
     "morgan": "^1.10.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
