@@ -1,0 +1,101 @@
+body
+  font-family sans-serif
+  line-height 1.4em
+
+h1
+  margin 30px 0
+
+h2
+  margin 50px 0 20px 0
+
+.notification
+  color blue
+  background lightgrey
+  font-size 20px
+  border-style solid
+  border-radius 5px
+  padding 10px
+  margin-bottom 10px
+
+.notification.error
+  color red
+
+.notification.success
+  color green
+
+
+.blog-list
+  display flex
+  flex-flow row wrap
+  justify-content start
+  align-items start
+  gap 14px
+  margin 0
+  padding 0
+
+  .blog
+    width @css{calc(50% - 7px)}
+    display flex
+    flex-flow row wrap
+    justify-content start
+    align-items center
+    gap 15px 0
+
+    .vote
+      width 50px
+      display flex
+      flex-flow column wrap
+      align-items center
+      padding 10px 0
+
+      button
+        appearance none
+        background-color transparent
+        border none
+
+      button:hover
+        cursor pointer
+
+    a.info
+      width @css{calc(100% - 90px)}
+      text-decoration none
+      color inherit
+      background #e5e5e5
+      padding 10px 20px
+      transition background .3s ease
+
+    a.info:hover
+      background #d9d9d9
+
+
+form
+  display flex
+  flex-flow row wrap
+  justify-content start
+  align-items start
+  gap 10px
+
+  div
+    width 100%
+
+    label
+      display inline-block
+      width 84px
+
+  input[type='submit']
+    appearance none
+    background #e5e5e5
+    border none
+    margin 5px 0
+    padding 10px 20px
+    transition background .3s ease
+
+  input[type='submit']:hover
+    cursor pointer
+    background #d9d9d9
+
+
+@media (max-width: 899px)
+  .blog-list
+    .blog
+      width 100%
