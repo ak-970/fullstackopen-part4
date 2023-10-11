@@ -6,8 +6,28 @@ h1
   margin 30px 0
 
 h2
-  margin 50px 0 20px 0
+  margin 30px 0 20px 0
 
+
+section
+  margin 20px 0
+
+
+button
+input[type='submit']
+  appearance none
+  background #e5e5e5
+  border none
+  margin 5px 0
+  padding 7px 15px
+  transition background .3s ease
+
+button:hover
+input[type='submit']:hover
+  cursor pointer
+  background #d9d9d9
+
+  
 .notification
   color blue
   background lightgrey
@@ -30,15 +50,16 @@ h2
   justify-content start
   align-items start
   gap 14px
-  margin 0
+  margin 30px 0
   padding 0
 
   .blog
-    width @css{calc(50% - 7px)}
+    // width @css{calc(50% - 7px)}
+    width 100%
     display flex
-    flex-flow row wrap
+    flex-flow row nowrap
     justify-content start
-    align-items center
+    align-items stretch
     gap 15px 0
 
     .vote
@@ -57,15 +78,39 @@ h2
         cursor pointer
 
     a.info
-      width @css{calc(100% - 90px)}
+      position relative
+      // width @css{calc(100% - 90px)}
+      width 100%
       text-decoration none
       color inherit
-      background #e5e5e5
+      // background #e5e5e5
+      background #d9d9d9
       padding 10px 20px
       transition background .3s ease
 
+      > span
+        display block
+        padding 2px 0
+
+        > b
+          font-size 1.3em
+
+      button.remove-blog
+        background #000
+        color #fff
+
+      button.remove-blog:hover
+        background #4b4b4b
+
+      button.toggle-visibility
+        position absolute
+        top 10px
+        right 20px
+        margin 0
+
     a.info:hover
-      background #d9d9d9
+      // background #d9d9d9
+      background #c2c2c2
 
 
 form
@@ -82,20 +127,13 @@ form
       display inline-block
       width 84px
 
-  input[type='submit']
-    appearance none
-    background #e5e5e5
-    border none
-    margin 5px 0
-    padding 10px 20px
-    transition background .3s ease
 
-  input[type='submit']:hover
-    cursor pointer
-    background #d9d9d9
+// @media (max-width: 899px)
+//   .blog-list
+//     .blog
+//       width 100%
 
 
-@media (max-width: 899px)
-  .blog-list
-    .blog
-      width 100%
+
+.hide
+  display none !important
