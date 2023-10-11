@@ -1,9 +1,9 @@
-import BlogListItem from './BlogListItem'
+import Blog from './Blog'
 
 const BlogList = ({ blogs, handleVote, deleteBlog, user }) =>
   <ul className="blog-list">
     {blogs.map(blog =>
-      <BlogListItem
+      <Blog
         key={blog.id}
         blog={blog}
         handleVote={() => handleVote(blog.id)}
