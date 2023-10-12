@@ -16,17 +16,12 @@ const App = () => {
   // references
   const blogFormRef = useRef()
 
+
   // use states
-  const [newUsername, setNewUsername] = useState('')
-  const [newPassword, setNewPassword] = useState('')
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const [notification, setNotification] = useState({ message : null, type : '' })
 
-
-  // event handlers
-  const handleUsernameChange = (event) => setNewUsername(event.target.value)
-  const handlePasswordChange = (event) => setNewPassword(event.target.value)
 
   // use effects
   useEffect(() => {
@@ -48,7 +43,7 @@ const App = () => {
   }, [])
 
 
-  // helper functions
+  // method functions
   const notify = (message, type = 'info') => {
     setNotification({ message, type })
     setTimeout(() => {
@@ -56,24 +51,14 @@ const App = () => {
     }, 5000)
   }
 
-  // method functions
-  const handleLogin = async (event) => {
-    event.preventDefault()
-
+  const login = async (username, password) => {
     try {
-      const user = await loginService.login({
-        username : newUsername,
-        password : newPassword,
-      })
-
+      const user = await loginService.login({ username, password })
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
       setUser(user)
-      // notify(`Hi ${user.name}!`, 'success')
-      setNewUsername('')
-      setNewPassword('')
     } catch (exception) {
       notify('Wrong credentials', 'error')
     }
@@ -151,13 +136,7 @@ const App = () => {
       {user === null
         ? <>
           <h2>Login</h2>
-          <LoginForm
-            handleLogin={handleLogin}
-            newUsername={newUsername}
-            handleUsernameChange={handleUsernameChange}
-            newPassword={newPassword}
-            handlePasswordChange={handlePasswordChange}
-          />
+          <LoginForm login={login} />
         </>
         : <>
 
