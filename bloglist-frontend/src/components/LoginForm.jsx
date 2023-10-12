@@ -33,7 +33,7 @@ const LoginForm = ({
         <label htmlFor='password'>Password: </label>
         <input id='password' type='password' value={newPassword} onChange={handlePasswordChange}/>
       </div>
-      <input type='submit' value='Login'/>
+      <input id='submitLogin' type='submit' value='Login'/>
     </form>
   )
 }
